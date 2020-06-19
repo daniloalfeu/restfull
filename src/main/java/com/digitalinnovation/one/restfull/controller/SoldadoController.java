@@ -7,17 +7,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/v1/soldado")
 public class SoldadoController {
     private SoldadoService soldadoService;
 
-    public SoldadoController (SoldadoService soldadoService){
+    public SoldadoController(SoldadoService soldadoService) {
         this.soldadoService = soldadoService;
     }
 
     @GetMapping("/{cpf}")
-    public ResponseEntity buscarSoldado(@PathVariable () String cpf){
+    public ResponseEntity buscarSoldado(@PathVariable() String cpf) {
         Soldado soldado = soldadoService.buscarSoldado(cpf);
         return ResponseEntity.status(HttpStatus.OK).body(soldado);
     }
@@ -29,14 +31,23 @@ public class SoldadoController {
     }
 
     @PutMapping("{cpf}")
-    public ResponseEntity editarSoldado(@PathVariable () String cpf,
-                                        @RequestBody SoldadoEditRequest soldadoEditRequest){
+    public ResponseEntity editarSoldado(@PathVariable() String cpf,
+                                        @RequestBody SoldadoEditRequest soldadoEditRequest) {
         soldadoService.alterarSoldado(cpf, soldadoEditRequest);
         return ResponseEntity.ok().build();
 
     }
 
+    @DeleteMapping("{cpf}")
+    public ResponseEntity deletarSoldado(@PathVariable String cpf) {
+        soldadoService.deletarSoldado(cpf);
+        return ResponseEntity.ok().build();
+    }
 
+    @GetMapping
+    public ResponseEntity<List<Soldado>> buscarSoldado() {
+        List<Soldado> soldados = soldadoService.buscarSoldados();
+        return ResponseEntity.status(HttpStatus.OK).body(soldados);
 
-
+    }
 }
